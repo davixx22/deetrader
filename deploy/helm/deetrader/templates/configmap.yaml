@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "deetrader.fullname" . }}-config
+  labels:
+    {{- include "deetrader.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.config.appEnv | quote }}
+  TRADING_MODE: {{ .Values.config.tradingMode | quote }}
+  EXECUTION_MODE: {{ .Values.config.executionMode | quote }}
+  LIVE_TRADING_ENABLED: {{ .Values.config.liveTradingEnabled | quote }}
+  BROKER_PROVIDER: {{ .Values.config.brokerProvider | quote }}
+  MARKET_DATA_PROVIDER: {{ .Values.config.marketDataProvider | quote }}
+  AI_PROVIDER: {{ .Values.config.aiProvider | quote }}
+  CORS_ORIGINS: {{ .Values.config.corsOrigins | quote }}
+  IBKR_BASE_URL: {{ .Values.config.ibkrBaseUrl | quote }}
+  IBKR_VERIFY_TLS: {{ .Values.config.ibkrVerifyTls | quote }}
+  IBKR_ORDER_SUBMISSION_ENABLED: {{ .Values.config.ibkrOrderSubmissionEnabled | quote }}

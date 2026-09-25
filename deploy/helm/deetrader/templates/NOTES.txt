@@ -1,0 +1,5 @@
+DeeTrader is installed for {{ .Values.ingress.host }}.
+
+Frontend service: {{ include "deetrader.fullname" . }}-frontend
+Backend service:  {{ include "deetrader.fullname" . }}-backend
+Secret:           {{ include "deetrader.secretName" . }}

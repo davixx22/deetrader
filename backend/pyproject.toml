@@ -1,0 +1,33 @@
+[project]
+name = "deetrader"
+version = "0.1.0"
+description = "Risk-first paper and semi-automated trading platform"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116,<1", "uvicorn[standard]>=0.35,<1", "pydantic-settings>=2.10,<3",
+  "sqlalchemy[asyncio]>=2.0.43,<3", "asyncpg>=0.30,<1", "alembic>=1.16,<2",
+  "redis>=6.4,<7", "httpx>=0.28,<1", "pyjwt>=2.10,<3", "pwdlib[argon2]>=0.2,<1",
+  "prometheus-client>=0.22,<1", "structlog>=25.4,<26", "python-multipart>=0.0.20,<1"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4,<9", "pytest-asyncio>=1.1,<2", "ruff>=0.12,<1", "mypy>=1.17,<2"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]

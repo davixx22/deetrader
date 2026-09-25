@@ -1,0 +1,17 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- range $component := list "frontend" }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "deetrader.fullname" $ }}-{{ $component }}
+  labels:
+    {{- include "deetrader.labels" $ | nindent 4 }}
+spec:
+  minAvailable: {{ $.Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "deetrader.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: {{ $component }}
+---
+{{- end }}
+{{- end }}

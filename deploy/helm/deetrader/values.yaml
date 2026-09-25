@@ -1,0 +1,111 @@
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: deetrader-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 80
+    targetPort: 3000
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 384Mi}
+
+backend:
+  # Keep one replica: the active IBKR session and runtime broker switch are process-local.
+  replicaCount: 1
+  image:
+    repository: deetrader-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+  resources:
+    requests: {cpu: 150m, memory: 192Mi}
+    limits: {cpu: "1", memory: 512Mi}
+
+worker:
+  replicaCount: 1
+  resources:
+    requests: {cpu: 50m, memory: 96Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+
+config:
+  appEnv: production
+  tradingMode: paper
+  executionMode: manual
+  liveTradingEnabled: "false"
+  brokerProvider: paper
+  marketDataProvider: mock
+  aiProvider: disabled
+  corsOrigins: '["https://deetrader.example.com"]'
+  ibkrBaseUrl: https://ibkr-gateway.example.internal/v1/api
+  ibkrVerifyTls: "true"
+  ibkrOrderSubmissionEnabled: "false"
+
+secrets:
+  create: false
+  existingSecret: deetrader-secrets
+  secretKey: ""
+  adminPassword: ""
+  databaseUrl: ""
+  redisUrl: ""
+  postgresPassword: ""
+  ibkrAccountId: ""
+  ibkrAccessToken: ""
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  host: deetrader.example.com
+  tls:
+    enabled: false
+    secretName: deetrader-tls
+
+postgresql:
+  enabled: true
+  image: postgres:16-alpine
+  database: deetrader
+  username: deetrader
+  storage: 10Gi
+  storageClassName: ""
+  resources:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: "1", memory: 1Gi}
+
+redis:
+  enabled: true
+  image: redis:7.4-alpine
+  storage: 2Gi
+  storageClassName: ""
+  resources:
+    requests: {cpu: 50m, memory: 96Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: false
+
+serviceAccount:
+  create: true
+  name: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: /metrics
+  prometheus.io/port: "8000"
